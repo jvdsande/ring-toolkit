@@ -1,0 +1,22 @@
+{
+  "name": "ring-toolkit",
+  "version": "0.0.1",
+  "description": "All in one toolkit for web app development",
+  "type": "module",
+  "bin": {
+    "ring-toolkit": "src/bin.js"
+  },
+  "main": "src/index.js",
+  "dependencies": {
+    "@koa/cors": "^3.1.0",
+    "@web/config-loader": "^0.1.3",
+    "@web/dev-server": "^0.1.5",
+    "@web/dev-server-rollup": "^0.3.2",
+    "@web/test-runner": "^0.12.6",
+    "cli": "^1.0.1",
+    "depcheck": "^1.4.0",
+    "fs-extra": "^9.1.0",
+    "rollup": "^2.36.1",
+    "sade": "^1.7.4"
+  }
+}
