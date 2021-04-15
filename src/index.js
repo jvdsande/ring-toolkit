@@ -1,5 +1,6 @@
 import sade from 'sade'
 import fs from 'fs-extra'
+import path from 'path'
 import { readConfig, ConfigLoaderError } from '@web/config-loader'
 
 import { commandDev } from './commands/dev.js'
@@ -7,6 +8,7 @@ import { commandTest } from './commands/test.js'
 import { commandBuild } from './commands/build.js'
 import { commandDepCheck } from './commands/depcheck.js'
 import { commandServe } from './commands/serve.js'
+import url from 'url'
 
 /**
  * Load Ring Toolkit configuration from current working directory
@@ -65,11 +67,11 @@ async function run(command, slots, params) {
 
 const app = sade('ring-toolkit')
 
-const pkg = fs.readJsonSync('./package.json')
+const pkg = fs.readJsonSync(path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '../package.json'))
 
 app.version(pkg.version)
 
-app.describe('Ring Toolkit CLI (alias: rtk, ring)')
+app.describe('Ring Toolkit CLI (alias: ring)')
 
 const aliases = {
   dev: ['webDevServer', '@web/dev-server', 'web-dev-server', 'wds', 'start'],
@@ -108,16 +110,18 @@ app
 app
   .command('serve [public]')
   .alias(aliases.serve)
-  .option('-c, --cors [cors]', 'Enable CORS', false)
-  .option('-s, --spa [appIndex]', 'Enable SPA fallback to index.html', false)
-  .option('--ssl-key [sslKey]', 'Path to SSL key. Enables SSL', '')
-  .option('--ssl-cert [sslCert]', 'Path to SSL cert. Enables SSL', '')
+  .option('-c, --cors', 'Enable CORS', false)
+  .option('-s, --spa', 'Enable SPA fallback to index.html', false)
+  .option('--ssl-key', 'Path to SSL key. Enables SSL')
+  .option('--ssl-cert', 'Path to SSL cert. Enables SSL')
   .describe(
     'launch @web/dev-server configured for static serving, accept any additional wds parameter'
   )
   .action(async (publicFolder, options) => {
     await run(commandServe, ['serve', ...aliases.serve], {
       publicFolder,
+      sslKey: options['ssl-key'],
+      sslCert: options['ssl-cert'],
       ...options
     })
   })
