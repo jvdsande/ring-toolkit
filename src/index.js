@@ -82,7 +82,7 @@ const aliases = {
 app
   .command('dev')
   .alias(aliases.dev)
-  .describe('launch @web/dev-server, accept any wds parameter')
+  .describe('launch @web/dev-server, accept any additional wds parameter')
   .action(async () => {
     await run(commandDev, ['dev', ...aliases.dev])
   })
@@ -90,7 +90,7 @@ app
 app
   .command('test')
   .alias(aliases.test)
-  .describe('launch @web/test-runner, accept any wtr parameter')
+  .describe('launch @web/test-runner, accept any additional wtr parameter')
   .action(async () => {
     await run(commandTest, ['test', ...aliases.test])
   })
@@ -110,8 +110,10 @@ app
   .alias(aliases.serve)
   .option('-c, --cors [cors]', 'Enable CORS', false)
   .option('-s, --spa [appIndex]', 'Enable SPA fallback to index.html', false)
+  .option('--ssl-key [sslKey]', 'Path to SSL key. Enables SSL', '')
+  .option('--ssl-cert [sslCert]', 'Path to SSL cert. Enables SSL', '')
   .describe(
-    'launch @web/dev-server configured for static serving, accept any @web/dev-server parameter'
+    'launch @web/dev-server configured for static serving, accept any additional wds parameter'
   )
   .action(async (publicFolder, options) => {
     await run(commandServe, ['serve', ...aliases.serve], {

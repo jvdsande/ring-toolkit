@@ -1,6 +1,6 @@
 {
   "name": "ring-toolkit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "All in one toolkit for web app development",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
