@@ -2,6 +2,12 @@
   "name": "ring-toolkit",
   "version": "0.0.1",
   "description": "All in one toolkit for web app development",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": "https://github.com/jvdsande/ring-toolkit",
+  "author": "Jérémie van der Sande <jeremie.vandersande@gmail.com>",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "ring-toolkit": "src/bin.js"
