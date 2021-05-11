@@ -23,9 +23,9 @@ export async function commandBuild(config) {
 
   cli.info('Building using Rollup...')
 
-  try {
+  async function executeRollup(rollupConfig) {
     const bundle = await rollup({
-      ...config,
+      ...rollupConfig,
       onwarn: (warning) => {
         if (warning.plugin) {
           cli.info(`${warning.plugin}:`)
@@ -37,9 +37,19 @@ export async function commandBuild(config) {
       }
     })
 
-    await bundle.write(config.output)
+    await bundle.write(rollupConfig.output)
 
     await bundle.close()
+  }
+
+  try {
+    if (Array.isArray(config)) {
+      for (const conf of config) {
+        await executeRollup(conf)
+      }
+    } else {
+      await executeRollup(config)
+    }
   } catch (err) {
     cli.error('An error occurred during build')
     cli.fatal(err)
