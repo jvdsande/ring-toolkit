@@ -1,18 +1,26 @@
 {
   "name": "ring-toolkit",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "All in one toolkit for web app development",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "scripts": {
+    "prepare": "rollup src/index.js --dir dist --format cjs --exports named --external true"
+  },
   "repository": "https://github.com/jvdsande/ring-toolkit",
   "author": "Jérémie van der Sande <jeremie.vandersande@gmail.com>",
   "license": "MIT",
-  "type": "module",
+  "main": "./dist/index.js",
   "bin": {
-    "ring-toolkit": "src/bin.js"
+    "ring-toolkit": "bin.js"
   },
-  "main": "src/index.js",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "@web/config-loader": "^0.1.3",

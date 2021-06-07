@@ -1,6 +1,7 @@
-import sade from 'sade'
+import url from 'url'
 import fs from 'fs-extra'
 import path from 'path'
+import sade from 'sade'
 import { readConfig, ConfigLoaderError } from '@web/config-loader'
 
 import { commandDev } from './commands/dev.js'
@@ -8,19 +9,30 @@ import { commandTest } from './commands/test.js'
 import { commandBuild } from './commands/build.js'
 import { commandDepCheck } from './commands/depcheck.js'
 import { commandServe } from './commands/serve.js'
-import url from 'url'
 
 /**
  * Load Ring Toolkit configuration from current working directory
+ * @param {string} configFile - The file to load the configuration from
  * @returns {Promise<{}|*>} - Loaded configuration
  */
-async function loadConfiguration() {
+async function loadConfiguration(configFile) {
   let config = {}
   try {
-    config =
-      (await readConfig('rtconfig')) ??
-      (await readConfig('ring-toolkit.config')) ??
-      {}
+    if (configFile) {
+      const parts = configFile.split('.')
+      let found = null
+      while (!found && parts.length) {
+        found = await readConfig(parts.join('.'))
+        parts.pop()
+      }
+
+      config = found ?? {}
+    } else {
+      config =
+        (await readConfig('rtconfig')) ??
+        (await readConfig('ring-toolkit.config')) ??
+        {}
+    }
   } catch (error) {
     if (error instanceof ConfigLoaderError) {
       // If the error is a ConfigLoaderError it has a human readable error message
@@ -60,7 +72,7 @@ async function getCommandConfiguration(slots, config) {
  */
 async function run(command, slots, params) {
   await command(
-    await getCommandConfiguration(slots, await loadConfiguration()),
+    await getCommandConfiguration(slots, await loadConfiguration(params.config)),
     params
   )
 }
@@ -81,20 +93,24 @@ const aliases = {
   depcheck: []
 }
 
+const configOption = ['-c, --config', 'Path to the configuration file to load', './rtconfig']
+
 app
   .command('dev')
   .alias(aliases.dev)
   .describe('launch @web/dev-server, accept any additional wds parameter')
-  .action(async () => {
-    await run(commandDev, ['dev', ...aliases.dev])
+  .option(...configOption)
+  .action(async (options) => {
+    await run(commandDev, ['dev', ...aliases.dev], options)
   })
 
 app
   .command('test')
   .alias(aliases.test)
   .describe('launch @web/test-runner, accept any additional wtr parameter')
-  .action(async () => {
-    await run(commandTest, ['test', ...aliases.test])
+  .option(...configOption)
+  .action(async (options) => {
+    await run(commandTest, ['test', ...aliases.test], options)
   })
 
 app
@@ -103,14 +119,16 @@ app
   .describe(
     'launch rollup, accept rollup CLI parameters if config is not provided'
   )
-  .action(async () => {
-    await run(commandBuild, ['build', ...aliases.build])
+  .option(...configOption)
+  .action(async (options) => {
+    await run(commandBuild, ['build', ...aliases.build], options)
   })
 
 app
   .command('serve [public]')
   .alias(aliases.serve)
-  .option('-c, --cors', 'Enable CORS', false)
+  .option(...configOption)
+  .option('-C, --cors', 'Enable CORS', false)
   .option('-s, --spa', 'Enable SPA fallback to index.html', false)
   .option('--ssl-key', 'Path to SSL key. Enables SSL')
   .option('--ssl-cert', 'Path to SSL cert. Enables SSL')
@@ -130,8 +148,9 @@ app
   .command('depcheck')
   .alias(aliases.depcheck)
   .describe('launch depcheck')
-  .action(async () => {
-    await run(commandDepCheck, ['depcheck', ...aliases.depcheck])
+  .option(...configOption)
+  .action(async (options) => {
+    await run(commandDepCheck, ['depcheck', ...aliases.depcheck], options)
   })
 
 /**
