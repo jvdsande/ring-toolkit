@@ -219,6 +219,7 @@ async function commandDepCheck(config) {
   const results = await depcheck__default['default'](process.cwd(), config);
 
   const declaredDeps = [
+    pkg.name,
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
     ...Object.keys(pkg.devDependencies || {})
