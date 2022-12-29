@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-const ringToolkit = require('./dist/index.js')
+const ringToolkit = require('./dist/index.js');
 
-ringToolkit.cli()
+ringToolkit.cli();

@@ -1,36 +1,97 @@
 {
-  "name": "ring-toolkit",
-  "version": "0.0.6",
-  "description": "All in one toolkit for web app development",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
-  "scripts": {
-    "prepare": "rollup src/index.js --dir dist --format cjs --exports named --external true"
-  },
+  "name": "@ring-toolkit/root",
+  "private": true,
+  "license": "MIT",
   "repository": "https://github.com/jvdsande/ring-toolkit",
   "author": "Jérémie van der Sande <jeremie.vandersande@gmail.com>",
-  "license": "MIT",
-  "main": "./dist/index.js",
-  "bin": {
-    "ring-toolkit": "bin.js"
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   },
-  "exports": {
-    ".": {
-      "import": "./index.mjs",
-      "require": "./dist/index.js"
+  "scripts": {
+    "build": "rimraf packages/*/tsconfig.tsbuildinfo && tsc --build",
+    "build:production": "node scripts/workspaces-scripts-bin.mjs build:production",
+    "build:site": "yarn build && rocket build",
+    "build:watch": "rimraf packages/*/tsconfig.tsbuildinfo && tsc --build --watch",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "format:eslint": "eslint --ext .ts,.js,.mjs,.cjs . --fix",
+    "format:prettier": "node node_modules/prettier/bin-prettier.js \"**/*.{ts,js,mjs,cjs,md}\" \"**/package.json\" --write --ignore-path .eslintignore",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:eslint": "eslint --ext .ts,.js,.mjs,.cjs .",
+    "lint:prettier": "node node_modules/prettier/bin-prettier.js \"**/*.{ts,js,mjs,cjs,md}\" --check --ignore-path .eslintignore",
+    "prepare": "husky install",
+    "reinstall-workspace": "rimraf packages/*/node_modules && rimraf node_modules && yarn install && yarn build",
+    "release": "changeset publish && yarn format",
+    "release:enter-pre": "[ ! -f .changeset/pre.json ] && yarn changeset pre enter next || echo 'Already in pre mode'",
+    "test": "yarn test:node",
+    "test:node": "mocha \"packages/*/test/**/*.test.{ts,js,mjs,cjs}\" --require ts-node/register --exit --retries 3",
+    "update": "npm run update:mjs-dts-entrypoints && npm run update:tsconfigs",
+    "update-dependency": "node scripts/update-dependency.js",
+    "update:mjs-dts-entrypoints": "node scripts/generate-mjs-dts-entrypoints.mjs && yarn format",
+    "update:tsconfigs": "node scripts/generate-ts-configs.mjs && yarn format"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.3",
+    "@types/sinon": "^10.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "chai": "^4.2.0",
+    "concurrently": "^6.3.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.1.1",
+    "mocha": "^8.2.1",
+    "nanocolors": "^0.2.1",
+    "prettier": "^2.3.2",
+    "prettier-plugin-package": "^1.3.0",
+    "sinon": "^11.1.2",
+    "ts-node": "^10.3.0",
+    "typescript": "4.1.3"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "eslint-config-prettier",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "env": {
+      "browser": true,
+      "node": true,
+      "mocha": true,
+      "es2020": true
+    },
+    "rules": {
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-interface": "off",
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-var-requires": "off",
+      "@typescript-eslint/ban-ts-comment": "off"
     }
   },
-  "dependencies": {
-    "@koa/cors": "^3.1.0",
-    "@web/config-loader": "^0.1.3",
-    "@web/dev-server": "^0.1.17",
-    "@web/dev-server-rollup": "^0.3.4",
-    "@web/test-runner": "^0.13.12",
-    "cli": "^1.0.1",
-    "depcheck": "^1.4.1",
-    "fs-extra": "^9.1.0",
-    "rollup": "^2.52.2",
-    "sade": "^1.7.4"
-  }
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write --ignore-path .eslintignore"
+    ],
+    "*.md": [
+      "prettier --write --ignore-path .eslintignore"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "arrowParens": "avoid",
+    "printWidth": 100,
+    "trailingComma": "all"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

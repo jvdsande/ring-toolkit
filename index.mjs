@@ -1,3 +1,3 @@
-import ringToolkit from './dist/index.js'
+import ringToolkit from './dist/index.js';
 
-export const { cli, Pipeline } = ringToolkit
+export const { cli, Pipeline } = ringToolkit;

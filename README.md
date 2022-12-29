@@ -75,13 +75,11 @@ The configuration should implement the following interface:
 ```ts
 interface RingToolkitConfiguration {
   // Can use alias `@web/dev-server`,  'web-dev-server', 'wds'
-  dev?: WebDevServerConfiguration | (() => Promise<WebDevServerConfiguration>)
-  test?:
-    | WebTestRunnerConfiguration
-    | (() => Promise<WebTestRunnerConfiguration>)
-  build?: RollupConfiguration | (() => Promise<RollupConfiguration>)
-  serve?: WebDevServerConfiguration | (() => Promise<WebDevServerConfiguration>)
-  depcheck?: DepCheckConfiguration | (() => Promise<DepCheckConfiguration>)
+  dev?: WebDevServerConfiguration | (() => Promise<WebDevServerConfiguration>);
+  test?: WebTestRunnerConfiguration | (() => Promise<WebTestRunnerConfiguration>);
+  build?: RollupConfiguration | (() => Promise<RollupConfiguration>);
+  serve?: WebDevServerConfiguration | (() => Promise<WebDevServerConfiguration>);
+  depcheck?: DepCheckConfiguration | (() => Promise<DepCheckConfiguration>);
 }
 ```
 
@@ -102,16 +100,16 @@ The Ring Toolkit configuration file should export this configuration as default:
 export default {
   dev: {
     port: 3000,
-    watch: true
-  }
-}
+    watch: true,
+  },
+};
 ```
 
 Thanks to this setup, it is possible to maintain a shared standardized configuration and use it across project to configure, in one line of code, the four underlying tools:
 
 ```js
-import { configShared } from '@ring-toolkit/config-shared'
+import { configShared } from '@ring-toolkit/config-shared';
 
-export default configShared()
+export default configShared();
 // Here we can pass any custom options for our shared configuration
 ```

@@ -1,0 +1,41 @@
+{
+  "name": "@ring-toolkit/serve",
+  "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "description": "@web/dev-server executable for Ring Toolkit",
+  "license": "MIT",
+  "repository": "https://github.com/jvdsande/ring-toolkit",
+  "author": "Jérémie van der Sande <jeremie.vandersande@gmail.com>",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "*.mjs",
+    "dist",
+    "src"
+  ],
+  "peerDependencies": {
+    "@koa/cors": "^3.1.0",
+    "@web/dev-server": "^0.1.25"
+  },
+  "dependencies": {
+    "@ring-toolkit/executable": "0.0.1",
+    "@ring-toolkit/web-dev-server": "0.0.1",
+    "@types/koa__cors": "^3.0.3"
+  },
+  "devDependencies": {
+    "@koa/cors": "^3.1.0",
+    "@web/dev-server": "^0.1.25"
+  }
+}

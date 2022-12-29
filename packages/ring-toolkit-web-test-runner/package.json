@@ -1,0 +1,37 @@
+{
+  "name": "@ring-toolkit/web-test-runner",
+  "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "description": "@web/test-runner executable for Ring Toolkit",
+  "license": "MIT",
+  "repository": "https://github.com/jvdsande/ring-toolkit",
+  "author": "Jérémie van der Sande <jeremie.vandersande@gmail.com>",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "*.mjs",
+    "dist",
+    "src"
+  ],
+  "peerDependencies": {
+    "@web/test-runner": "^0.13.20"
+  },
+  "dependencies": {
+    "@ring-toolkit/executable": "0.0.1"
+  },
+  "devDependencies": {
+    "@web/test-runner": "^0.13.20"
+  }
+}
